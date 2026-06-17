@@ -1,0 +1,66 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+'''
+Recursive inorder
+
+inorder traversal of BST returns sorted arr
+return arr[k - 1] O(n)
+but goes to all nodes
+instead we can count k at inorder traversal and return kth node
+
+O(n) Time and Space
+'''
+class Solution:
+    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+        res = root.val
+        count = k
+        
+        def inorder(node):
+            nonlocal count, res
+
+            if not node:
+                return
+
+            inorder(node.left)
+            # in inorder traversal, when we visit node
+            # it is always sorted. So when we get to kth node
+            # that is our kth smallest node
+            count -= 1
+            if count == 0:
+                res = node.val
+                return
+
+            inorder(node.right)
+        
+        inorder(root)
+        return res
+
+'''
+Iterative inorder
+
+O(n) Time and Space
+'''
+# class Solution:
+#     def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+#         stack = []
+#         curr = root
+
+#         # keeps iterating until both the current path and
+#         # all pending nodes are exhausted
+#         while stack or curr:
+#             while curr:
+#                 # add elements to stack in LVR order
+#                 stack.append(curr)
+#                 curr = curr.left
+            
+#             # Visit after all left nodes are added
+#             curr = stack.pop()
+#             k -= 1
+#             if k == 0:
+#                 return curr.val
+#             curr = curr.right
